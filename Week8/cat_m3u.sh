@@ -11,7 +11,7 @@ for file in "$@"; do
   totalDuration = 0;
 
   #check if line is readable, including any issues with newline chars at the end
-  while IFS= read -r line || [[ -n "$line" ]; do
+  while IFS= read -r line || [[ -n "$line" ]]; do
     #use bash rematch to apply values to variables
     if [[ $line =~ ^#EXTINF:([0-9]+),(.*) ]]; then
       seconds="${BASH_REMATCH[1]}"
