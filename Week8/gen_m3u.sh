@@ -1,5 +1,5 @@
 #create a test for no inputs
-if [[$# -eq 0]]; then
+if [[ $# -eq 0 ]]; then
   echo "Usage: gen_m3u.sh file file ..." >&2
   exit 1
 fi
