@@ -9,9 +9,9 @@ echo "#EXTM3U"
 for file in "$@"; do
   #put invalid file check here?
 
-  duration=$  #soxi D
-  title=$ #soxi -a
-  artist=$soxi-a
+  duration=$(soxi -D "$file" | awk '{print int($1)}')
+  title=$(soxi -a "$file" | grep -i 'title=' | sed 's/.*title=//' || echo "untitled")
+  artist=$(soxi -a "$file" | grep -i 'artist=' | sed 's/.*artist=//' || echo "unknown artist")
 
   echo "#EXTINF:${duration},${title} - ${artist}"
   echo "$(realpath "$file")"
