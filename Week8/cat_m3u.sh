@@ -8,14 +8,14 @@ for file in "$@"; do
   #check for invalid inputs
 
   #vars
-  totalDuration = 0;
+  totalDuration=0;
 
   #check if line is readable, including any issues with newline chars at the end
   while IFS= read -r line || [[ -n "$line" ]]; do
     #use bash rematch to apply values to variables
-    if [[ $line =~ ^#EXTINF:([0-9]+),(.*) ]]; then
-      seconds="${BASH_REMATCH[1]}"
-      trackinfo="${BASH_REMATCH[2]}"
+    if echo "$line" | grep -qE "^#EXTINF:[0-9]+,"; then
+      seconds=$(echo "$line" | sed -E 's/^#EXTINF:([0-9]+),.*/\1/')
+      trackinfo=$(echo "$line" | sed -E 's/^#EXTINF:[0-9]+,(.*)/\1/')
 
       totalDuration = totalDuration + seconds
       #datetime formatted printf output
@@ -30,12 +30,13 @@ for file in "$@"; do
       else
         printf "%8d:%02d:%02d  %s\n\n" $((total_seconds/3600)) $((total_seconds%3600/60)) $((total_seconds%60)) "$(basename "$file")"
       fi
+    fi
     done < "$file"
 
     printf "======== ==================================================\n"
     if (( total_seconds >= 3600)); then
-      printf "%8d:%02d:%02d  %s\n\n" $((total_seconds/3600)) $((total_seconds%3600/60)) $((total_seconds%60)) "$(basename "$file")"
+      printf "%2d:%02d:%02d  %s\n\n" $((total_seconds/3600)) $((total_seconds%3600/60)) $((total_seconds%60)) "$(basename "$file")"
     else
-      printf "%8d:%02d  %s\n\n" $((total_seconds/60)) $((total_seconds%60)) "$(basename "$file")"
+      printf "%4d:%02d  %s\n\n" $((total_seconds/60)) $((total_seconds%60)) "$(basename "$file")"
     fi
 done
